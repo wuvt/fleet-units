@@ -6,7 +6,7 @@ After=flanneld.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-redis-prod
 ExecStartPre=-/usr/bin/docker rm wuvt-site-redis-prod
-ExecStart=/usr/bin/docker run --name wuvt-site-redis-prod -v /home/core/wuvt-site-redis-prod-data:/data redis
+ExecStart=/usr/bin/docker run --name=wuvt-site-redis-prod --volume=/home/core/wuvt-site-redis-prod-data:/data redis
 ExecStop=/usr/bin/docker stop wuvt-site-redis-prod
 Restart=always
 
