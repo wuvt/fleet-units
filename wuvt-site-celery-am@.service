@@ -1,0 +1,18 @@
+[Unit]
+Description=wuvt-site celery AM
+After=docker.service
+After=flanneld.service
+Requires=docker.service
+Requires=flanneld.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill wuvt-site-celery-am
+ExecStartPre=-/usr/bin/docker rm wuvt-site-celery-am
+#ExecStartPre=-/usr/bin/docker pull wuvt-site-celery
+ExecStart=/usr/bin/docker run --read-only --name wuvt-site-celery-am -v /home/core/wuvt-am-data/config:/data/config wuvt-site-celery
+ExecStop=/usr/bin/docker stop wuvt-site-celery-am
+Restart=always
+
+[X-Fleet]
+Conflicts=wuvt-site-celery-am@*.service

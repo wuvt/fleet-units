@@ -1,0 +1,18 @@
+[Unit]
+Description=wuvt-site AM
+After=docker.service
+After=flanneld.service
+Requires=docker.service
+Requires=flanneld.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill wuvt-site-am
+ExecStartPre=-/usr/bin/docker rm wuvt-site-am
+#ExecStartPre=-/usr/bin/docker pull wuvt-site
+ExecStart=/usr/bin/docker run --read-only --name wuvt-site-am -p 8444:8443 -v /home/core/wuvt-am-data/config:/data/config -v /media/website-media-am:/data/media -v /home/core/wuvt-am-data/ssl:/data/ssl wuvt-site
+ExecStop=/usr/bin/docker stop wuvt-site-am
+Restart=always
+
+[X-Fleet]
+Conflicts=wuvt-site-am@*.service
