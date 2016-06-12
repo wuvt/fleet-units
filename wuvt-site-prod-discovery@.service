@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce wuvt-site production
+BindsTo=wuvt-site-prod@%i.service
+After=wuvt-site-prod@%i.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/website/wuvt-site-prod@%i '{ \"host\": \"%H\", \"port\": 8443 }' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /services/website/wuvt-site-prod@%i
+
+[X-Fleet]
+MachineOf=wuvt-site-prod@%i.service
