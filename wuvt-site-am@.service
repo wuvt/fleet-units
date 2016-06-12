@@ -10,7 +10,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-am
 ExecStartPre=-/usr/bin/docker rm wuvt-site-am
 #ExecStartPre=-/usr/bin/docker pull wuvt-site
-ExecStart=/bin/sh -c "/usr/bin/docker run --read-only --name=wuvt-site-am -p 8444:8443 --env=\"REDIS_URI=$(etcdctl get '/services/redis/wuvt-site-am')\" --volume=/home/core/wuvt-am-data/config:/data/config --volume=/media/website-media-am:/data/media --volume=/home/core/wuvt-am-data/ssl:/data/ssl wuvt-site"
+ExecStart=/bin/sh -c "/usr/bin/docker run --read-only --name=wuvt-site-am -p 8444:8443 --env=\"REDIS_URL=$(etcdctl get '/services/redis/wuvt-site-am')\" --volume=/home/core/wuvt-am-data/config:/data/config --volume=/media/website-media-am:/data/media --volume=/home/core/wuvt-am-data/ssl:/data/ssl wuvt-site"
 ExecStop=/usr/bin/docker stop wuvt-site-am
 Restart=always
 

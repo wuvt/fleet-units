@@ -10,7 +10,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-celery-prod
 ExecStartPre=-/usr/bin/docker rm wuvt-site-celery-prod
 #ExecStartPre=-/usr/bin/docker pull wuvt-site-celery
-ExecStart=/bin/sh -c "/usr/bin/docker run --read-only --name=wuvt-site-celery-prod --env=\"REDIS_URI=$(etcdctl get '/services/redis/wuvt-site-prod')\" --volume=/home/core/wuvt-data/config:/data/config wuvt-site-celery"
+ExecStart=/bin/sh -c "/usr/bin/docker run --read-only --name=wuvt-site-celery-prod --env=\"REDIS_URL=$(etcdctl get '/services/redis/wuvt-site-prod')\" --volume=/home/core/wuvt-data/config:/data/config wuvt-site-celery"
 ExecStop=/usr/bin/docker stop wuvt-site-celery-prod
 Restart=always
 
