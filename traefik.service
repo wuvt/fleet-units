@@ -1,0 +1,14 @@
+[Unit]
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill traefik
+ExecStartPre=-/usr/bin/docker rm traefik
+ExecStart=/usr/bin/docker run --name=traefik -p 80:80 -p 443:443 --volume=/home/core/traefik.toml:/etc/traefik/traefik.toml --volume=/home/core/traefik-ssl:/etc/traefik/https traefik
+ExecStop=/usr/bin/docker stop traefik
+Restart=always
+
+[X-Fleet]
+MachineID=8c2d132dbb39496caf06571273d44538

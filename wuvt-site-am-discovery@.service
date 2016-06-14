@@ -4,8 +4,8 @@ BindsTo=wuvt-site-am@%i.service
 After=wuvt-site-am@%i.service
 
 [Service]
-ExecStart=/bin/sh -c "while true; do etcdctl set /services/https/wuvt-site-am@%i 'https://%H.wuvt.vt.edu:8444' --ttl 60;sleep 45;done"
-ExecStop=/usr/bin/etcdctl rm /services/https/wuvt-site-am@%i
+ExecStart=/bin/sh -c "while true; do etcdctl set /traefik/backends/wuvt-site-am/servers/%i/weight 10 --ttl 60;etcdctl set /traefik/backends/wuvt-site-am/servers/%i/url 'https://%H.wuvt.vt.edu:8444' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm --recursive /traefik/backends/wuvt-site-am/servers/%i
 
 [X-Fleet]
 MachineOf=wuvt-site-am@%i.service
