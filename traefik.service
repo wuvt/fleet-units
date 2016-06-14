@@ -6,7 +6,8 @@ After=docker.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill traefik
 ExecStartPre=-/usr/bin/docker rm traefik
-ExecStart=/usr/bin/docker run --name=traefik -p 80:80 -p 443:443 --volume=/home/core/traefik.toml:/etc/traefik/traefik.toml --volume=/home/core/traefik-ssl:/etc/traefik/https traefik
+ExecStartPre=-/usr/bin/touch /home/core/traefik-access.log
+ExecStart=/usr/bin/docker run --name=traefik -p 80:80 -p 443:443 --volume=/home/core/traefik.toml:/etc/traefik/traefik.toml --volume=/home/core/traefik-ssl:/etc/traefik/https --volume=/home/core/traefik-access.log:/var/log/access.log traefik
 ExecStop=/usr/bin/docker stop traefik
 Restart=always
 
