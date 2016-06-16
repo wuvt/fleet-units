@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce registry
+BindsTo=registry.service
+After=registry.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl set /traefik/backends/registry/servers/primary/weight 10 --ttl 60;etcdctl set /traefik/backends/registry/servers/primary/url 'https://%H.wuvt.vt.edu:5000' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm --recursive /traefik/backends/registry/servers/primary
+
+[X-Fleet]
+MachineOf=registry.service
