@@ -1,0 +1,15 @@
+[Unit]
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill registry
+ExecStartPre=-/usr/bin/docker rm registry
+ExecStartPre=-/usr/bin/touch /home/core/registry-access.log
+ExecStart=/usr/bin/docker run -p 5000:5000 --name registry -v /home/core/registry-data:/var/lib/registry registry:2
+ExecStop=/usr/bin/docker stop registry
+Restart=always
+
+[X-Fleet]
+MachineID=8c2d132dbb39496caf06571273d44538
