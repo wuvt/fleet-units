@@ -1,0 +1,14 @@
+[Unit]
+Requires=flanneld.service
+After=flanneld.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill postgres
+ExecStartPre=-/usr/bin/docker rm postgres
+ExecStart=/usr/bin/docker run --name=postgres -e "POSTGRES_PASSWORD=ThisIsInsecurePleaseHackMe" --volume=/home/core/postgres-data:/var/lib/postgresql/data postgres
+ExecStop=/usr/bin/docker stop postgres
+Restart=always
+
+[X-Fleet]
+MachineID=e1a9b18fc91245ca93b2b4ca28793712

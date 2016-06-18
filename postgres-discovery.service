@@ -1,0 +1,14 @@
+[Unit]
+Description=Announce postgres
+BindsTo=postgres.service
+After=postgres.service
+
+[Service]
+Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
+Environment="ETCDCTL_KEY_FILE=/etc/ssl/etcd/%H-key.pem"
+Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/postgres/postgres 'postgresql://'$(docker inspect postgres | jq -r '.[0].NetworkSettings.IPAddress')':5432' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /services/postgres/postgres
+
+[X-Fleet]
+MachineOf=postgres.service
