@@ -6,7 +6,8 @@ After=docker.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill registry
 ExecStartPre=-/usr/bin/docker rm registry
-ExecStart=/usr/bin/docker run -p 5000:5000 --name registry -v /home/core/registry-data:/var/lib/registry -v /home/core/registry-tls:/certs -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/cert.pem -e REGISTRY_HTTP_TLS_KEY=/certs/privkey.pem registry:2
+ExecStartPre=-/usr/bin/docker pull registry
+ExecStart=/usr/bin/docker run -p 5000:5000 --name registry -v /home/core/registry-data:/var/lib/registry -v /home/core/registry-auth:/auth -v /home/core/registry-tls:/certs -e "REGISTRY_AUTH=htpasswd" -e "REGISTRY_AUTH_HTPASSWD_REALM=Docker Registry" -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd" -e "REGISTRY_HTTP_TLS_CERTIFICATE=/certs/cert.pem" -e "REGISTRY_HTTP_TLS_KEY=/certs/privkey.pem" registry:2
 ExecStop=/usr/bin/docker stop registry
 Restart=always
 
