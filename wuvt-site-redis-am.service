@@ -1,0 +1,14 @@
+[Unit]
+Requires=flanneld.service
+After=flanneld.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill wuvt-site-redis-am
+ExecStartPre=-/usr/bin/docker rm wuvt-site-redis-am
+ExecStart=/usr/bin/docker run --name=wuvt-site-redis-am --volume=/home/core/wuvt-site-redis-am-data:/data redis
+ExecStop=/usr/bin/docker stop wuvt-site-redis-am
+Restart=always
+
+[X-Fleet]
+MachineID=e1a9b18fc91245ca93b2b4ca28793712
