@@ -12,7 +12,7 @@ Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-celery-am
 ExecStartPre=-/usr/bin/docker rm wuvt-site-celery-am
-#ExecStartPre=-/usr/bin/docker pull wuvt-site-celery
+ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site-celery
 ExecStart=/bin/sh -c "/usr/bin/docker run --read-only --name=wuvt-site-celery-am --env=\"DATABASE_URL=$(etcdctl get '/services/postgres/postgres')\" --env=\"REDIS_URL=$(etcdctl get '/services/redis/wuvt-site-am')\" --volume=/home/core/wuvt-am-data/config:/data/config wuvt-site-celery"
 ExecStop=/usr/bin/docker stop wuvt-site-celery-am
 Restart=always
