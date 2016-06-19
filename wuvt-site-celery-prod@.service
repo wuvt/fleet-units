@@ -4,8 +4,6 @@ After=docker.service
 After=flanneld.service
 Requires=docker.service
 Requires=flanneld.service
-BindsTo=postgres.service
-BindsTo=wuvt-site-redis-prod.service
 
 [Service]
 Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
@@ -15,7 +13,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-celery-prod
 ExecStartPre=-/usr/bin/docker rm wuvt-site-celery-prod
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site-celery
-ExecStart=/bin/sh -c "/usr/bin/docker run --read-only --name=wuvt-site-celery-prod --env=\"DATABASE_URL=$(etcdctl get '/services/postgres/postgres')\" --env=\"REDIS_URL=$(etcdctl get '/services/redis/wuvt-site-prod')\" --volume=/home/core/wuvt-data/config:/data/config wuvt-site-celery"
+ExecStart=/bin/sh -c "export DATABASE_URL=\"$(etcdctl get '/services/postgres/postgres')\" REDIS_URL=\"$(etcdctl get '/services/redis/wuvt-site-prod')\"; test -n "$DATABASE_URL" && test -n "$REDIS_URL" && /usr/bin/docker run --read-only --name=wuvt-site-celery-prod --env=DATABASE_URL --env=REDIS_URL --volume=/home/core/wuvt-data/config:/data/config wuvt-site-celery"
 ExecStop=/usr/bin/docker stop wuvt-site-celery-prod
 Restart=always
 
