@@ -6,16 +6,14 @@ After=flanneld.service
 Wants=wuvt-site-prod-discovery@%i.service
 Requires=docker.service
 Requires=flanneld.service
+ConditionPathExists=/home/core/wuvt-data/config/services.json
 
 [Service]
-Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
-Environment="ETCDCTL_KEY_FILE=/etc/ssl/etcd/%H-key.pem"
-Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-prod
 ExecStartPre=-/usr/bin/docker rm wuvt-site-prod
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site
-ExecStart=/bin/sh -c "export DATABASE_URL=\"$(etcdctl get '/services/postgres/postgres')\" REDIS_URL=\"$(etcdctl get '/services/redis/wuvt-site-prod')\"; test -n "$DATABASE_URL" && test -n "$REDIS_URL" && /usr/bin/docker run --read-only --name=wuvt-site-prod -p 8443:8443 --env=DATABASE_URL --env=REDIS_URL --volume=/home/core/wuvt-data/config:/data/config --volume=/media/website-media-prod:/data/media --volume=/home/core/wuvt-data/ssl:/data/ssl wuvt-site"
+ExecStart=/usr/bin/docker run --read-only --name=wuvt-site-prod -p 8443:8443 --volume=/home/core/wuvt-data/config:/data/config --volume=/media/website-media-prod:/data/media --volume=/home/core/wuvt-data/ssl:/data/ssl wuvt-site
 ExecStop=/usr/bin/docker stop wuvt-site-prod
 Restart=always
 
