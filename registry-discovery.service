@@ -4,11 +4,8 @@ BindsTo=registry.service
 After=registry.service
 
 [Service]
-Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
-Environment="ETCDCTL_KEY_FILE=/etc/ssl/etcd/%H-key.pem"
-Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
-ExecStart=/bin/sh -c "while true; do etcdctl set /traefik/backends/registry/servers/primary/weight 10 --ttl 60;etcdctl set /traefik/backends/registry/servers/primary/url 'https://%H.wuvt.vt.edu:5000' --ttl 60;sleep 45;done"
-ExecStop=/usr/bin/etcdctl rm --recursive /traefik/backends/registry/servers/primary
+ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /traefik/backends/registry/servers/primary/weight 10 --ttl 60;etcdctl --no-sync set /traefik/backends/registry/servers/primary/url 'https://%H.wuvt.vt.edu:5000' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl --no-sync rm --recursive /traefik/backends/registry/servers/primary
 
 [X-Fleet]
 MachineOf=registry.service

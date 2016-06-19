@@ -4,11 +4,8 @@ BindsTo=wuvt-site-am@%i.service
 After=wuvt-site-am@%i.service
 
 [Service]
-Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
-Environment="ETCDCTL_KEY_FILE=/etc/ssl/etcd/%H-key.pem"
-Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
-ExecStart=/bin/sh -c "while true; do etcdctl set /traefik/backends/wuvt-site-am/servers/%i/weight 10 --ttl 60;etcdctl set /traefik/backends/wuvt-site-am/servers/%i/url 'https://%H.wuvt.vt.edu:8444' --ttl 60;sleep 45;done"
-ExecStop=/usr/bin/etcdctl rm --recursive /traefik/backends/wuvt-site-am/servers/%i
+ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /traefik/backends/wuvt-site-am/servers/%i/weight 10 --ttl 60;etcdctl --no-sync set /traefik/backends/wuvt-site-am/servers/%i/url 'https://%H.wuvt.vt.edu:8444' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl --no-sync rm --recursive /traefik/backends/wuvt-site-am/servers/%i
 
 [X-Fleet]
 MachineOf=wuvt-site-am@%i.service

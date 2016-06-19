@@ -4,11 +4,8 @@ BindsTo=wuvt-site-redis-prod.service
 After=wuvt-site-redis-prod.service
 
 [Service]
-Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
-Environment="ETCDCTL_KEY_FILE=/etc/ssl/etcd/%H-key.pem"
-Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
-ExecStart=/bin/sh -c "while true; do etcdctl set /services/redis/wuvt-site-prod 'redis://'$(docker inspect wuvt-site-redis-prod | jq -r '.[0].NetworkSettings.IPAddress')':6379' --ttl 60;sleep 45;done"
-ExecStop=/usr/bin/etcdctl rm /services/redis/wuvt-site-prod
+ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /services/redis/wuvt-site-prod 'redis://'$(docker inspect wuvt-site-redis-prod | jq -r '.[0].NetworkSettings.IPAddress')':6379' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl --no-sync rm /services/redis/wuvt-site-prod
 
 [X-Fleet]
 MachineOf=wuvt-site-redis-prod.service
