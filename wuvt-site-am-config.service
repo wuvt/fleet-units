@@ -2,7 +2,6 @@
 Description=Update wuvt-site-am config
 After=etcd2.service
 Requires=etcd2.service
-ConditionPathExists=/home/core/wuvt-am-data/config
 
 [Service]
 Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
@@ -10,7 +9,7 @@ Environment="ETCDCTL_KEY_FILE=/etc/ssl/etcd/%H-key.pem"
 Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
 ExecStart=/usr/bin/sh -c "\
     while true; do \
-          /usr/bin/echo '{\"database_url\": \"'$(/usr/bin/etcdctl get /services/postgres/postgres)'\",\"redis_url\": \"'$(/usr/bin/etcdctl get /services/redis/wuvt-site-am)'\"}' > /home/core/wuvt-am-data/config/services.json; \
+          /usr/bin/echo '{\"database_url\": \"'$(/usr/bin/etcdctl get /services/postgres/postgres)'\",\"redis_url\": \"'$(/usr/bin/etcdctl get /services/redis/wuvt-site-am)'\"}' > /run/wuvt-site-am-services.json; \
           /usr/bin/etcdctl watch --recursive /services; \
     done"
 
