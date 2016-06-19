@@ -4,13 +4,10 @@ After=etcd2.service
 Requires=etcd2.service
 
 [Service]
-Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"
-Environment="ETCDCTL_KEY_FILE=/etc/ssl/etcd/%H-key.pem"
-Environment="ETCDCTL_CA_FILE=/etc/ssl/etcd/ca.pem"
 ExecStart=/usr/bin/sh -c "\
     while true; do \
-          /usr/bin/echo '{\"database_url\": \"'$(/usr/bin/etcdctl get /services/postgres/postgres)'\",\"redis_url\": \"'$(/usr/bin/etcdctl get /services/redis/wuvt-site-prod)'\"}' > /run/wuvt-site-prod-services.json; \
-          /usr/bin/etcdctl watch --recursive /services; \
+          /usr/bin/echo '{\"database_url\": \"'$(/usr/bin/etcdctl --no-sync get /services/postgres/postgres)'\",\"redis_url\": \"'$(/usr/bin/etcdctl --no-sync get /services/redis/wuvt-site-prod)'\"}' > /run/wuvt-site-prod-services.json; \
+          /usr/bin/etcdctl --no-sync watch --recursive /services; \
     done"
 
 [X-Fleet]
