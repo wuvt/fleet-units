@@ -1,9 +1,13 @@
 [Unit]
 Description=wuvt-site production
+Before=wuvt-site-prod-discovery@%i.service
 After=docker.service
 After=flanneld.service
+Wants=wuvt-site-prod-discovery@%i.service
 Requires=docker.service
 Requires=flanneld.service
+BindsTo=postgres.service
+BindsTo=wuvt-site-redis-prod.service
 
 [Service]
 Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"

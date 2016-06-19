@@ -4,6 +4,8 @@ After=docker.service
 After=flanneld.service
 Requires=docker.service
 Requires=flanneld.service
+BindsTo=postgres.service
+BindsTo=wuvt-site-redis-am.service
 
 [Service]
 Environment="ETCDCTL_CERT_FILE=/etc/ssl/etcd/%H.pem"

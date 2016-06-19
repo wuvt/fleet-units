@@ -1,6 +1,7 @@
 [Unit]
 Requires=docker.service
 After=docker.service
+Wants=registry-discovery.service
 
 [Service]
 TimeoutStartSec=0
