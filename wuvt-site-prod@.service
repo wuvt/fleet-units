@@ -3,10 +3,12 @@ Description=wuvt-site production
 Before=wuvt-site-prod-discovery@%i.service
 After=docker.service
 After=flanneld.service
+After=wuvt-site-prod-pre@%i.service
 Wants=wuvt-site-prod-discovery@%i.service
 Requires=docker.service
 Requires=flanneld.service
-ConditionPathExists=/run/wuvt-site-prod-services.json
+Requires=wuvt-site-prod-pre@%i.service
+BindsTo=wuvt-site-prod-pre@%i.service
 
 [Service]
 TimeoutStartSec=0
@@ -19,3 +21,4 @@ Restart=always
 
 [X-Fleet]
 Conflicts=wuvt-site-prod@*.service
+MachineOf=wuvt-site-prod-pre@%i.service
