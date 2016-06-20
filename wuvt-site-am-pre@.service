@@ -1,0 +1,33 @@
+[Unit]
+Description=Configure services for wuvt-site AM
+After=etcd2.service
+Before=wuvt-site-am@%i.service
+Before=wuvt-site-celery-am@%i.service
+Wants=wuvt-site-am@%i.service
+Wants=wuvt-site-celery-am@%i.service
+Requires=etcd2.service
+
+[Service]
+ExecStart=/usr/bin/sh -c "\
+    value=$(</run/wuvt-site-am-services.json); \
+    while true; do \
+        database_url=$(/usr/bin/etcdctl --no-sync get /services/postgres/postgres); \
+        [ -z \"$database_url\" ] && exit 1; \
+        redis_url=$(/usr/bin/etcdctl --no-sync get /services/redis/wuvt-site-am); \
+        [ -z \"$redis_url\" ] && exit 2; \
+        new_value='{\"database_url\": \"'$database_url'\",\"redis_url\": \"'$redis_url'\"}'; \
+        if [ -z \"$value\" ]; then \
+            value=$new_value; \
+            /usr/bin/echo $value > /run/wuvt-site-am-services.json; \
+        elif [[ \"$value\" != \"$new_value\" ]]; then \
+            value=$new_value; \
+            /usr/bin/echo $value > /run/wuvt-site-am-services.json; \
+            exit 3; \
+        fi; \
+        /usr/bin/etcdctl --no-sync watch --recursive /services; \
+    done"
+RestartSec=30s
+Restart=always
+
+[X-Fleet]
+Conflicts=wuvt-site-am-pre@*.service

@@ -2,9 +2,11 @@
 Description=wuvt-site celery AM
 After=docker.service
 After=flanneld.service
+After=wuvt-site-am-pre@%i.service
 Requires=docker.service
 Requires=flanneld.service
-ConditionPathExists=/run/wuvt-site-am-services.json
+Requires=wuvt-site-am-pre@%i.service
+BindsTo=wuvt-site-am-pre@%i.service
 
 [Service]
 TimeoutStartSec=0
@@ -13,7 +15,9 @@ ExecStartPre=-/usr/bin/docker rm wuvt-site-celery-am
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site-celery
 ExecStart=/usr/bin/docker run --read-only --name=wuvt-site-celery-am --volume=/home/core/wuvt-am-data/config:/data/config --volume=/run/wuvt-site-am-services.json:/data/config/services.json wuvt-site-celery
 ExecStop=/usr/bin/docker stop wuvt-site-celery-am
+RestartSec=60s
 Restart=always
 
 [X-Fleet]
 Conflicts=wuvt-site-celery-am@*.service
+MachineOf=wuvt-site-am-pre@%i.service
