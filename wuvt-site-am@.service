@@ -15,7 +15,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-am
 ExecStartPre=-/usr/bin/docker rm wuvt-site-am
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site
-ExecStart=/usr/bin/docker run --read-only --name=wuvt-site-am -p 8444:8443 --volume=/home/core/wuvt-am-data/config:/data/config --volume=/run/wuvt-site-am-services.json:/data/config/services.json --volume=/media/website-media-prod:/data/media --volume=/home/core/wuvt-data/ssl:/data/ssl wuvt-site
+ExecStart=/usr/bin/docker run --read-only --name=wuvt-site-am -p 8444:8443 --volume=/home/core/wuvt-am-data/config:/data/config --volume=/run/wuvt-site-am-services.json:/data/config/services.json --volume=/media/website-media-prod:/data/media --volume=/home/core/wuvt-data/ssl:/data/ssl registry.wuvt.vt.edu/wuvt-site
 ExecStop=/usr/bin/docker stop wuvt-site-am
 RestartSec=60s
 Restart=always
