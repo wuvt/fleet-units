@@ -13,7 +13,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-celery-am
 ExecStartPre=-/usr/bin/docker rm wuvt-site-celery-am
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site-celery
-ExecStart=/usr/bin/docker run --read-only --name=wuvt-site-celery-am --volume=/home/core/wuvt-am-data/config:/data/config --volume=/run/wuvt-site-am-services.json:/data/config/services.json registry.wuvt.vt.edu/wuvt-site-celery
+ExecStart=/usr/bin/docker run --read-only --name=wuvt-site-celery-am --volume=/media/local-storage/wuvt-site-am-config:/data/config --volume=/run/wuvt-site-am-services.json:/data/config/services.json registry.wuvt.vt.edu/wuvt-site-celery
 ExecStop=/usr/bin/docker stop wuvt-site-celery-am
 RestartSec=60s
 Restart=always
