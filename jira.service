@@ -1,0 +1,23 @@
+[Unit]
+Description=JIRA
+Before=jira-discovery.service
+After=docker.service
+After=flanneld.service
+After=postgres.service
+Wants=jira-discovery.service
+Requires=docker.service
+Requires=flanneld.service
+BindsTo=postgres.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill jira
+ExecStartPre=-/usr/bin/docker rm jira
+ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/jira
+ExecStart=/usr/bin/docker run --name=jira -p 8001:8080 --env X_PROXY_PORT=443 --env X_PROXY_SCHEME=https --link postgres:postgres --volume=/media/local-storage/jira-data:/var/atlassian/jira --volume=/run/jira-services.json:/data/config/services.json --volume=/media/local-storage/jira-logs:/opt/atlassian/jira/logs registry.wuvt.vt.edu/jira
+ExecStop=/usr/bin/docker stop jira
+RestartSec=60s
+Restart=always
+
+[X-Fleet]
+MachineOf=postgres.service

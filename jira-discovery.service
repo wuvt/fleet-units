@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce JIRA
+BindsTo=jira.service
+After=jira.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /traefik/backends/jira/servers/primary/weight 10 --ttl 60;etcdctl --no-sync set /traefik/backends/jira/servers/primary/url 'http://%H.wuvt.vt.edu:8001' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl --no-sync rm --recursive /traefik/backends/jira/servers/1
+
+[X-Fleet]
+MachineOf=jira.service
