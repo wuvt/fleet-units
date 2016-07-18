@@ -23,4 +23,3 @@ Restart=always
 [X-Fleet]
 Conflicts=wuvt-site-am@*.service
 MachineOf=wuvt-site-am-pre@%i.service
-MachineMetadata=shared-storage=yes
