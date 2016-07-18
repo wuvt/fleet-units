@@ -2,9 +2,7 @@
 Description=Configure services for wuvt-site production
 After=etcd2.service
 Before=wuvt-site-prod@%i.service
-Before=wuvt-site-celery-prod@%i.service
 Wants=wuvt-site-prod@%i.service
-Wants=wuvt-site-celery-prod@%i.service
 Requires=etcd2.service
 
 [Service]

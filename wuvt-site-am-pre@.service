@@ -2,9 +2,7 @@
 Description=Configure services for wuvt-site AM
 After=etcd2.service
 Before=wuvt-site-am@%i.service
-Before=wuvt-site-celery-am@%i.service
 Wants=wuvt-site-am@%i.service
-Wants=wuvt-site-celery-am@%i.service
 Requires=etcd2.service
 
 [Service]
