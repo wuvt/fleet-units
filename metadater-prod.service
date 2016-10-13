@@ -1,0 +1,16 @@
+[Unit]
+Description=metadater production
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill metadater-prod
+ExecStartPre=-/usr/bin/docker rm metadater-prod
+ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/metadater
+ExecStart=/usr/bin/docker run --name=metadater-prod --volume=/media/local-storage/metadater-prod-config/config.py:/usr/src/app/config.py --volume=/usr/share/zoneinfo/America/New_York:/etc/localtime registry.wuvt.vt.edu/metadater
+ExecStop=/usr/bin/docker stop metadater-prod
+Restart=always
+
+[X-Fleet]
+MachineMetadata=shared-storage=yes
