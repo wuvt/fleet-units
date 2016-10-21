@@ -7,7 +7,7 @@ Wants=postgres-discovery.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill postgres
 ExecStartPre=-/usr/bin/docker rm postgres
-ExecStart=/usr/bin/docker run --name=postgres --env-file=/media/local-storage/postgres.env --volume=/media/local-storage/postgres-data:/var/lib/postgresql/data postgres
+ExecStart=/usr/bin/docker run --name=postgres --env-file=/media/local-storage/postgres.env --volume=/media/local-storage/postgres-data:/var/lib/postgresql/data postgres:9.5
 ExecStop=/usr/bin/docker stop postgres
 Restart=always
 
