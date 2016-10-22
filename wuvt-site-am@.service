@@ -3,23 +3,20 @@ Description=wuvt-site AM
 Before=wuvt-site-am-discovery@%i.service
 After=docker.service
 After=flanneld.service
-After=wuvt-site-am-pre@%i.service
 Wants=wuvt-site-am-discovery@%i.service
 Requires=docker.service
 Requires=flanneld.service
-Requires=wuvt-site-am-pre@%i.service
-BindsTo=wuvt-site-am-pre@%i.service
 
 [Service]
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-am
 ExecStartPre=-/usr/bin/docker rm wuvt-site-am
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site
-ExecStart=/usr/bin/docker run --name=wuvt-site-am -p 8444:8443 --volume=/media/local-storage/wuvt-site-am-config:/data/config --volume=/run/wuvt-site-am-services.json:/data/config/services.json --volume=/media/shared-storage/wuvt-site-am-media:/data/media --volume=/media/local-storage/wuvt-site-am-ssl:/data/ssl --volume=/usr/share/zoneinfo/America/New_York:/etc/localtime registry.wuvt.vt.edu/wuvt-site
+ExecStart=/usr/bin/docker run --name=wuvt-site-am -p 8444:8443 --volume=/media/local-storage/wuvt-site-am-config:/data/config --volume=/media/shared-storage/wuvt-site-am-media:/data/media --volume=/media/local-storage/wuvt-site-am-ssl:/data/ssl --volume=/usr/share/zoneinfo/America/New_York:/etc/localtime --dns=192.168.0.243 --dns=192.168.0.155 registry.wuvt.vt.edu/wuvt-site
 ExecStop=/usr/bin/docker stop wuvt-site-am
-RestartSec=60s
+RestartSec=10
 Restart=always
 
 [X-Fleet]
 Conflicts=wuvt-site-am@*.service
-MachineOf=wuvt-site-am-pre@%i.service
+MachineMetadata=shared-storage=yes

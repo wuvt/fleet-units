@@ -4,8 +4,8 @@ BindsTo=wuvt-site-redis-am.service
 After=wuvt-site-redis-am.service
 
 [Service]
-ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /services/redis/wuvt-site-am 'redis://'$(docker inspect wuvt-site-redis-am | jq -r '.[0].NetworkSettings.IPAddress')':6379' --ttl 60;sleep 45;done"
-ExecStop=/usr/bin/etcdctl --no-sync rm /services/redis/wuvt-site-am
+ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /skydns/local/skydns/prod/redis/wuvt-site-am '{\"host\":\"'$(docker inspect wuvt-site-redis-am | jq -r '.[0].NetworkSettings.IPAddress')'\",\"ttl\":60}';sleep 45;done"
+ExecStop=/usr/bin/etcdctl --no-sync rm /skydns/local/skydns/prod/redis/wuvt-site-am
 
 [X-Fleet]
 MachineOf=wuvt-site-redis-am.service
