@@ -4,7 +4,7 @@ BindsTo=postgres.service
 After=postgres.service
 
 [Service]
-ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /services/postgres/postgres 'postgresql://'$(docker inspect postgres | jq -r '.[0].NetworkSettings.IPAddress')':5432' --ttl 60;sleep 45;done"
+ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /services/postgres/postgres 'postgresql://'$(docker inspect postgres | jq -r '.[0].NetworkSettings.IPAddress')':5432' --ttl 60;etcdctl --no-sync set /skydns/local/skydns/prod/postgres '{\"host\":\"'$(docker inspect postgres | jq -r '.[0].NetworkSettings.IPAddress')'\",\"ttl\":60}';sleep 45;done"
 ExecStop=/usr/bin/etcdctl --no-sync rm /services/postgres/postgres
 
 [X-Fleet]
