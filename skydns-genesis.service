@@ -1,5 +1,5 @@
 [Unit]
-Description=SkyDNS
+Description=SkyDNS on genesis
 After=docker.service
 Requires=docker.service
 

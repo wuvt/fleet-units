@@ -1,0 +1,17 @@
+[Unit]
+Description=SkyDNS on dreyfus
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill skydns
+ExecStartPre=-/usr/bin/docker rm skydns
+ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/skydns
+ExecStart=/usr/bin/docker run --name=skydns --volume=/media/local-storage/skydns-ssl:/data/ssl --env=ETCD_MACHINES=https://192.168.0.155:2379 --env=ETCD_CACERT=/data/ssl/ca.pem --env=ETCD_TLSPEM=/data/ssl/skydns.pem --env=ETCD_TLSKEY=/data/ssl/skydns-key.pem -p 53:53/tcp -p 53:53/udp registry.wuvt.vt.edu/skydns
+ExecStop=/usr/bin/docker stop skydns
+RestartSec=10
+Restart=always
+
+[X-Fleet]
+MachineID=aec502922f374ff8bf8b6456f0869a41
