@@ -7,7 +7,7 @@ Wants=wuvt-site-redis-am-discovery.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-redis-am
 ExecStartPre=-/usr/bin/docker rm wuvt-site-redis-am
-ExecStart=/usr/bin/docker run --name=wuvt-site-redis-am --volume=/media/local-storage/wuvt-site-redis-am-data:/data redis --appendonly yes
+ExecStart=/usr/bin/docker run --name=wuvt-site-redis-am --volume=/media/local-storage/wuvt-site-redis-am-data:/data --volume=/media/local-storage/wuvt-site-redis-am-config/redis.conf:/etc/redis/redis.conf redis /etc/redis/redis.conf
 ExecStop=/usr/bin/docker stop wuvt-site-redis-am
 Restart=always
 
