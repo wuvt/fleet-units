@@ -12,7 +12,12 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill wuvt-site-am
 ExecStartPre=-/usr/bin/docker rm wuvt-site-am
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/wuvt-site
-ExecStart=/usr/bin/docker run --name=wuvt-site-am -p 8444:8443 --volume=/media/local-storage/wuvt-site-am-config:/data/config --volume=/media/shared-storage/wuvt-site-am-media:/data/media --volume=/media/local-storage/wuvt-site-am-ssl:/data/ssl --volume=/usr/share/zoneinfo/America/New_York:/etc/localtime --dns=192.168.0.243 --dns=192.168.0.155 registry.wuvt.vt.edu/wuvt-site
+ExecStartPre=/usr/bin/mkdir -p /run/wuvt/wuvt-site-am /run/ssl/wuvt-site-am
+ExecStartPre=/bin/sh -c "etcdctl --no-sync get /wuvt.vt.edu/config/wuvt-site-am > /run/wuvt/wuvt-site-am/config.json"
+ExecStartPre=/bin/sh -c "etcdctl --no-sync get /wuvt.vt.edu/ssl/ca_cert > /run/wuvt/wuvt-site-am/internalca.pem"
+ExecStartPre=/bin/sh -c "etcdctl --no-sync get /wuvt.vt.edu/ssl/wuvt-site-am/cert > /run/ssl/wuvt-site-am/cert.pem"
+ExecStartPre=/bin/sh -c "etcdctl --no-sync get /wuvt.vt.edu/ssl/wuvt-site-am/privkey > /run/ssl/wuvt-site-am/privkey.pem"
+ExecStart=/usr/bin/docker run --name=wuvt-site-am -p 8444:8443 --env=APP_CONFIG_PATH=/data/config/config.json --volume=/run/wuvt/wuvt-site-am:/data/config --volume=/run/ssl/wuvt-site-am:/data/ssl --volume=/media/shared-storage/wuvt-site-am-media:/data/media --volume=/usr/share/zoneinfo/America/New_York:/etc/localtime --dns=192.168.0.243 --dns=192.168.0.155 registry.wuvt.vt.edu/wuvt-site
 ExecStop=/usr/bin/docker stop wuvt-site-am
 RestartSec=10
 Restart=always

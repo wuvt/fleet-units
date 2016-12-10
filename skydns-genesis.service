@@ -8,7 +8,11 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill skydns
 ExecStartPre=-/usr/bin/docker rm skydns
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/skydns
-ExecStart=/usr/bin/docker run --name=skydns --volume=/media/local-storage/skydns-ssl:/data/ssl --env=ETCD_MACHINES=https://192.168.0.243:2379 --env=ETCD_CACERT=/data/ssl/ca.pem --env=ETCD_TLSPEM=/data/ssl/skydns.pem --env=ETCD_TLSKEY=/data/ssl/skydns-key.pem -p 53:53/tcp -p 53:53/udp registry.wuvt.vt.edu/skydns
+ExecStartPre=/usr/bin/mkdir -p /run/ssl/skydns
+ExecStartPre=/bin/sh -c "etcdctl --no-sync get /wuvt.vt.edu/ssl/skydns/ca_cert > /run/ssl/skydns/ca.pem"
+ExecStartPre=/bin/sh -c "etcdctl --no-sync get /wuvt.vt.edu/ssl/skydns/cert > /run/ssl/skydns/cert.pem"
+ExecStartPre=/bin/sh -c "etcdctl --no-sync get /wuvt.vt.edu/ssl/skydns/privkey > /run/ssl/skydns/privkey.pem"
+ExecStart=/usr/bin/docker run --name=skydns --volume=/run/ssl/skydns:/data/ssl --env=ETCD_MACHINES=https://192.168.0.243:2379 --env=ETCD_CACERT=/data/ssl/ca.pem --env=ETCD_TLSPEM=/data/ssl/cert.pem --env=ETCD_TLSKEY=/data/ssl/privkey.pem -p 53:53/tcp -p 53:53/udp registry.wuvt.vt.edu/skydns
 ExecStop=/usr/bin/docker stop skydns
 RestartSec=10
 Restart=always
