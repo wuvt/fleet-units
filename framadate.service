@@ -7,7 +7,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill framadate
 ExecStartPre=-/usr/bin/docker rm framadate
 ExecStartPre=-/usr/bin/docker pull registry.wuvt.vt.edu/framadate
-ExecStart=/usr/bin/docker run --name=framadate --volume=/media/local-storage/framadate-data/config.php:/var/www/html/app/inc/config.php registry.wuvt.vt.edu/framadate:latest
+ExecStart=/usr/bin/docker run --name=framadate --volume=/media/local-storage/framadate-data/config.php:/var/www/html/app/inc/config.php --dns=192.168.0.243 --dns=192.168.0.155 registry.wuvt.vt.edu/framadate:latest
 ExecStop=/usr/bin/docker stop framadate
 Restart=always
 
