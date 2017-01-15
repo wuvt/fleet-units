@@ -1,0 +1,16 @@
+[Unit]
+Requires=flanneld.service
+After=flanneld.service
+Wants=musicbrainz-redis-cache-discovery.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill musicbrainz-redis-cache
+ExecStartPre=-/usr/bin/docker rm musicbrainz-redis-cache
+ExecStart=/usr/bin/docker run --name=musicbrainz-redis-cache redis:3.2-alpine --maxmemory 8MB --maxmemory-policy allkeys-lru --save ""
+ExecStop=/usr/bin/docker stop musicbrainz-redis-cache
+Restart=always
+
+[X-Fleet]
+#MachineID=e1a9b18fc91245ca93b2b4ca28793712
+MachineID=aec502922f374ff8bf8b6456f0869a41

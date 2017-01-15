@@ -1,0 +1,11 @@
+[Unit]
+Description=Announce musicbrainz-redis-cache
+BindsTo=musicbrainz-redis-cache.service
+After=musicbrainz-redis-cache.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl --no-sync set /skydns/local/skydns/prod/redis/musicbrainz-redis-cache '{\"host\":\"'$(docker inspect musicbrainz-redis-cache | jq -r '.[0].NetworkSettings.IPAddress')'\",\"ttl\":60}';sleep 45;done"
+ExecStop=/usr/bin/etcdctl --no-sync rm /skydns/local/skydns/prod/redis/musicbrainz-redis-cache
+
+[X-Fleet]
+MachineOf=musicbrainz-redis-cache.service
