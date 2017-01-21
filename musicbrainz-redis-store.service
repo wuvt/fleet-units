@@ -12,5 +12,4 @@ ExecStop=/usr/bin/docker stop musicbrainz-redis-store
 Restart=always
 
 [X-Fleet]
-#MachineID=e1a9b18fc91245ca93b2b4ca28793712
-MachineID=aec502922f374ff8bf8b6456f0869a41
+MachineID=e1a9b18fc91245ca93b2b4ca28793712
